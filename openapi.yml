@@ -1,0 +1,1115 @@
+openapi: 3.0.0
+info:
+  title: wizard api
+  description: wizard api
+  version: 1.0.0
+servers:
+  - url: "http://localhost:8080"
+    description: local
+  - url: "https://localhost:8080/"
+    description: dev
+paths:
+  /processmodels:
+    post:
+      description: Consulta un grupo de servicios
+      requestBody:
+        description: Consulta de servicios
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Processmodelsfilter"
+            examples:
+              noFiltro:
+                summary: "Sin filtros"
+                value:
+                  {
+                    "user":
+                      {
+                        "country": "ESPAÑA",
+                        "countryCode": "ESP",
+                        "email": "fede.rodri@bbva.com",
+                        "groups":
+                          [
+                            "HOL-OPE-Pruebas_Gestor_revision",
+                            "HOL-OPE-Pruebas_Administrador",
+                          ],
+                        "id": "XE90911",
+                        "name": "Federico Rodriguez",
+                      },
+                  }
+              lineaDeServicio:
+                summary: "Consulta Linea Servicio"
+                value:
+                  {
+                    "user":
+                      {
+                        "country": "ESPAÑA",
+                        "countryCode": "ESP",
+                        "email": "fede.rodri@bbva.com",
+                        "groups":
+                          [
+                            "HOL-OPE-Pruebas_Gestor_revision",
+                            "HOL-OPE-Pruebas_Administrador",
+                          ],
+                        "id": "XE90911",
+                        "name": "Federico Rodriguez",
+                      },
+                    "filters":
+                      [
+                        { "idCommonData": 6, "value": "Holding" },
+                        { "idCommonData": 7, "value": "Operations" },
+                        { "idCommonData": 23, "value": "Pruebas Wizard" },
+                      ],
+                  }
+              AgrupadorN3:
+                summary: "Consulta Agrupador N3"
+                value:
+                  {
+                    "user":
+                      {
+                        "country": "ESPAÑA",
+                        "countryCode": "ESP",
+                        "email": "fede.rodri@bbva.com",
+                        "groups":
+                          [
+                            "HOL-OPE-Pruebas_Gestor_revision",
+                            "HOL-OPE-Pruebas_Administrador",
+                          ],
+                        "id": "XE90911",
+                        "name": "Federico Rodriguez",
+                      },
+                    "filters":
+                      [
+                        { "idCommonData": 6, "value": "Holding" },
+                        { "idCommonData": 7, "value": "Operations" },
+                        { "idCommonData": 20, "value": "Prueba_n2" },
+                        { "idCommonData": 21, "value": "Prueba_n3" },
+                      ],
+                  }
+
+      responses:
+        "200":
+          description: Created
+  /v1/processexecbpm/processmodel/{businessId}/getnexttask/{idTask}:
+    get:
+      parameters:
+        - name: "businessId"
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Identificador de la instancia en el BPM
+          example: W-HOL-OPE-1176
+        - name: "idTask"
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: identificador de la tarea en el wizard
+          example: 835
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TasksExecution"
+              examples:
+                tarea:
+                  summary: "Tarea"
+                  value:
+                    {
+                      "acceptDate": "testing_supervisor,testing_Supervisor",
+                      "estadoKanban": "Análisis",
+                      "finishDate": "",
+                      "group": "testing_gestor2,testing_supervisor,testing_Supervisor",
+                      "idProcessBPM": "",
+                      "idProcessExecution": "",
+                      "idTask": 836,
+                      "idTaskAction": "",
+                      "idTaskBPM": "",
+                      "name": "Aplicar Automático",
+                    }
+                paralela:
+                  summary: "Compuerta Paralela"
+                  value:
+                    {
+                      "acceptDate": "",
+                      "estadoKanban": "",
+                      "finishDate": "",
+                      "group": "group",
+                      "idProcessBPM": "",
+                      "idProcessExecution": "",
+                      "idTask": 837,
+                      "idTaskAction": "",
+                      "idTaskBPM": "",
+                      "name": "PARALLEL",
+                    }
+  /v1/processmodel/{businessId}/getparalleltasks/{idTask}:
+    get:
+      parameters:
+        - name: "businessId"
+          in: path
+          schema:
+            type: "string"
+          required: true
+          description: Identificador de la instancia en el BPM
+          example: W-HOL-OPE-1176
+        - name: "idTask"
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: identificador de la tarea en el wizard
+          example: 835
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                items:
+                  $ref: "#/components/schemas/TasksExecution"
+              examples:
+                tareas:
+                  summary: "Tareas paralelas"
+                  value:
+                    {
+                      "parallelTasks":
+                        [
+                          {
+                            "acceptDate": "testing_supervisor,testing_Supervisor",
+                            "estadoKanban": "Análisis",
+                            "finishDate": "",
+                            "group": "testing_gestor2,testing_supervisor,testing_Supervisor",
+                            "idProcessBPM": "",
+                            "idProcessExecution": "",
+                            "idTask": 836,
+                            "idTaskAction": "",
+                            "idTaskBPM": "",
+                            "name": "Aplicar Automático",
+                          },
+                          {
+                            "acceptDate": "testing_supervisor,testing_Supervisor",
+                            "estadoKanban": "Análisis",
+                            "finishDate": "",
+                            "group": "testing_gestor2,testing_supervisor,testing_Supervisor",
+                            "idProcessBPM": "",
+                            "idProcessExecution": "",
+                            "idTask": 837,
+                            "idTaskAction": "",
+                            "idTaskBPM": "",
+                            "name": "Envió de Documentación",
+                          },
+                        ],
+                    }
+  /v2/processmgmt/processmodel/task:
+    post:
+      description: Crea una nueva tarea
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ParamTaskIn"
+            examples:
+              tarea:
+                summary: "Tarea"
+                value:
+                  {
+                    "user":
+                      {
+                        "id": "XE1234",
+                        "name": "Federico Rodriguez",
+                        "email": "fede.rodri@bbva.com",
+                        "groups": ["GROUP_1", "testing_administrator"],
+                        "countryCode": "ESP",
+                      },
+                    "paramTask":
+                      {
+                        "idTask": null,
+                        "taskType": { "idTaskType": 1, "description": null },
+                        "idProcessVersion": 200,
+                        "name": "Validar",
+                        "description": "Valida la información",
+                        "assignedGroup": ["GROUP_1", "GROUP_2", "GROUP_3"],
+                        "kanbanStatus":
+                          { "idKanbanStatus": 1, "description": null },
+                        "idIntegration": null,
+                        "paramTaskFields":
+                          [
+                            {
+                              "idTaskField": null,
+                              "idTask": null,
+                              "name": "Riesgo",
+                              "variableType":
+                                { "idVariableType": 5, "description": "Lista" },
+                              "required": true,
+                              "editable": true,
+                              "hidden": false,
+                              "idProcessVar": 300,
+                              "list":
+                                {
+                                  "idList": 400,
+                                  "name": "Riesgo",
+                                  "listValue":
+                                    [
+                                      {
+                                        "idListValue": 100,
+                                        "description": "ALTO",
+                                      },
+                                      {
+                                        "idListValue": 101,
+                                        "description": "MEDIO",
+                                      },
+                                      {
+                                        "idListValue": 102,
+                                        "description": "BAJO",
+                                      },
+                                    ],
+                                },
+                              "idProcessVersion": 200,
+                            },
+                            {
+                              "idTaskField": null,
+                              "idTask": null,
+                              "name": "Justificación",
+                              "variableType":
+                                {
+                                  "idVariableType": "9",
+                                  "description": "Párrafo",
+                                },
+                              "required": false,
+                              "editable": true,
+                              "hidden": false,
+                              "idProcessVar": 301,
+                              "list":
+                                {
+                                  "idList": null,
+                                  "name": null,
+                                  "listValue":
+                                    [
+                                      {
+                                        "idListValue": null,
+                                        "description": null,
+                                      },
+                                    ],
+                                },
+                              "idProcessVersion": 200,
+                            },
+                          ],
+                        "paramSLATasks":
+                          [
+                            {
+                              "idSLATask": null,
+                              "idProcessVersion": 200,
+                              "idTask": null,
+                              "durationType":
+                                { "idDurationType": 1, "description": null },
+                              "value": 1,
+                              "sLAType":
+                                { "idSLAType": 1, "description": null },
+                            },
+                          ],
+                      },
+                  }
+              compuerta_paralela:
+                summary: "Compuerta Paralela"
+                value:
+                  {
+                    "user":
+                      {
+                        "country": "ESPAÑA",
+                        "countryCode": "ESP",
+                        "email": "cesaraugusto.guzman.contractor@dev.bbva.com",
+                        "groups":
+                          [
+                            "testing_administrador",
+                            "testing_gestor2",
+                            "testing_gestor",
+                            "HOL-OPE_BEXAdministrador",
+                            "HOL-OPE-Pruebas_Gestor_revision",
+                          ],
+                        "id": "XE94935",
+                        "name": "CESAR AUGUSTO GUZMAN AMAYA",
+                      },
+                    "paramTask":
+                      {
+                        "assignedGroup": [],
+                        "description": "TAREA PARALELA",
+                        "idIntegration": null,
+                        "idProcessVersion": 1524,
+                        "idTask": null,
+                        "kanbanStatus":
+                          { "description": "Prueba", "idKanbanStatus": 9 },
+                        "name": "PARALELO",
+                        "paramSLATasks":
+                          {
+                            "durationType":
+                              { "description": "Días", "idDurationType": 1 },
+                            "idProcessVersion": 1524,
+                            "idSLATask": null,
+                            "idTask": null,
+                            "sLAType": { "description": null, "idSLAType": 1 },
+                            "value": 0,
+                          },
+                        "paramTaskFields": [],
+                        "taskType":
+                          {
+                            "description": "Compuerta Paralela",
+                            "idTaskType": 4,
+                          },
+                      },
+                  }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ParamTask"
+              examples:
+                tarea:
+                  summary: "Tarea"
+                  value:
+                    {
+                      "paramTask":
+                        {
+                          "idTask": 1000,
+                          "taskType":
+                            { "idTaskType": 1, "description": "Manual" },
+                          "idProcessVersion": 200,
+                          "name": "Validar",
+                          "description": "Valida la información",
+                          "assignedGroup": ["GROUP_1", "GROUP_2", "GROUP_3"],
+                          "kanbanStatus":
+                            { "idKanbanStatus": 1, "description": "Backlog" },
+                          "idIntegration": null,
+                          "paramTaskFields":
+                            [
+                              {
+                                "idTaskField": 900,
+                                "idTask": 1000,
+                                "name": "Riesgo",
+                                "variableType":
+                                  {
+                                    "idVariableType": "5",
+                                    "description": "Lista",
+                                  },
+                                "required": true,
+                                "editable": true,
+                                "hidden": false,
+                                "idProcessVar": 300,
+                                "list":
+                                  {
+                                    "idList": 400,
+                                    "name": "Riesgo",
+                                    "listValue":
+                                      [
+                                        {
+                                          "idListValue": 100,
+                                          "description": "ALTO",
+                                        },
+                                        {
+                                          "idListValue": 101,
+                                          "description": "MEDIO",
+                                        },
+                                        {
+                                          "idListValue": 102,
+                                          "description": "BAJO",
+                                        },
+                                      ],
+                                  },
+                                "idProcessVersion": 200,
+                              },
+                              {
+                                "idTaskField": 901,
+                                "idTask": 1000,
+                                "name": "Justificación",
+                                "variableType":
+                                  {
+                                    "idVariableType": "9",
+                                    "description": "Párrafo",
+                                  },
+                                "required": false,
+                                "editable": true,
+                                "hidden": false,
+                                "idProcessVar": 301,
+                                "list":
+                                  {
+                                    "idList": null,
+                                    "name": null,
+                                    "listValue":
+                                      [
+                                        {
+                                          "idListValue": null,
+                                          "description": null,
+                                        },
+                                      ],
+                                  },
+                                "idProcessVersion": 200,
+                              },
+                            ],
+                          "paramSLATasks":
+                            [
+                              {
+                                "idSLATask": 800,
+                                "idProcessVersion": 200,
+                                "idTask": 1000,
+                                "durationType":
+                                  {
+                                    "idDurationType": 1,
+                                    "description": "Horas",
+                                  },
+                                "value": 1,
+                                "sLAType":
+                                  {
+                                    "idSLAType": 1,
+                                    "description": "SLA Atención",
+                                  },
+                              },
+                            ],
+                        },
+                    }
+                compuerta_paralela:
+                  summary: "Compuerta Paralela"
+                  value:
+                    {
+                      "paramTask":
+                        {
+                          "assignedGroup": [],
+                          "description": "TAREA PARALELA",
+                          "idIntegration": null,
+                          "idProcessVersion": 1524,
+                          "idTask": null,
+                          "kanbanStatus":
+                            { "description": "Prueba", "idKanbanStatus": 9 },
+                          "name": "PARALELO",
+                          "paramSLATasks":
+                            {
+                              "durationType":
+                                { "description": "Días", "idDurationType": 1 },
+                              "idProcessVersion": 1524,
+                              "idSLATask": null,
+                              "idTask": null,
+                              "sLAType":
+                                { "description": null, "idSLAType": 1 },
+                              "value": 0,
+                            },
+                          "paramTaskFields": [],
+                          "taskType":
+                            {
+                              "description": "Compuerta Paralela",
+                              "idTaskType": 4,
+                            },
+                        },
+                    }
+  /v1/processmgmt/activeServices:
+    get:
+      responses:
+        "200":
+          description: "success"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActiveServicesOut"
+  /v2/processmgmt/processmodel/taskRelations:
+    post:
+      description: Crea un flujo de servicio
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TaskRelationIn"
+            examples:
+              taskrelation:
+                summary: taskrelation
+                value:
+                  {
+                    "user":
+                      {
+                        "country": "ESPAÑA",
+                        "countryCode": "ESP",
+                        "email": "cesaraugusto.guzman.contractor@dev.bbva.com",
+                        "groups":
+                          [
+                            "testing_administrador",
+                            "testing_gestor2",
+                            "testing_gestor",
+                            "HOL-OPE_BEXAdministrador",
+                            "HOL-OPE-Pruebas_Gestor_revision",
+                          ],
+                        "id": "XE94935",
+                        "name": "CESAR AUGUSTO GUZMAN AMAYA",
+                      },
+                    "idProcessVersion": 1551,
+                    "paramTaskRelations":
+                      [
+                        {
+                          "idProcessVersion": 1551,
+                          "idTasksRelation": null,
+                          "paramDecisionVar":
+                            {
+                              "action": null,
+                              "idDecisionVar": null,
+                              "idProcessVar": null,
+                              "processVar": null,
+                            },
+                          "source": { "idTask": null, "taskName": null },
+                          "target": { "idTask": 3124, "taskName": "TAREA UNO" },
+                        },
+                        {
+                          "idProcessVersion": 1551,
+                          "idTasksRelation": null,
+                          "paramDecisionVar":
+                            {
+                              "action": null,
+                              "idDecisionVar": null,
+                              "idProcessVar": null,
+                              "processVar": null,
+                            },
+                          "source": { "idTask": 3124, "taskName": "TAREA UNO" },
+                          "target":
+                            {
+                              "idTask": 3125,
+                              "taskName": "TAREA PARALELA UNO",
+                            },
+                        },
+                        {
+                          "idProcessVersion": 1551,
+                          "idTasksRelation": null,
+                          "paramDecisionVar":
+                            {
+                              "action": null,
+                              "idDecisionVar": null,
+                              "idProcessVar": null,
+                              "processVar": null,
+                            },
+                          "source":
+                            {
+                              "idTask": 3125,
+                              "taskName": "TAREA PARALELA UNO",
+                            },
+                          "target":
+                            {
+                              "idTask": 3126,
+                              "taskName": "TAREA PARALELA DOS",
+                            },
+                        },
+                        {
+                          "idProcessVersion": 1551,
+                          "idTasksRelation": null,
+                          "paramDecisionVar":
+                            {
+                              "action": null,
+                              "idDecisionVar": null,
+                              "idProcessVar": null,
+                              "processVar": null,
+                            },
+                          "source":
+                            {
+                              "idTask": 3126,
+                              "taskName": "TAREA PARALELA DOS",
+                            },
+                          "target":
+                            {
+                              "idTask": 3127,
+                              "taskName": "TAREA PARALELA TRES",
+                            },
+                        },
+                        {
+                          "idProcessVersion": 1551,
+                          "idTasksRelation": null,
+                          "paramDecisionVar":
+                            {
+                              "action": null,
+                              "idDecisionVar": null,
+                              "idProcessVar": null,
+                              "processVar": null,
+                            },
+                          "source":
+                            {
+                              "idTask": 3127,
+                              "taskName": "TAREA PARALELA TRES",
+                            },
+                          "target": { "idTask": 3128, "taskName": "TAREA DOS" },
+                        },
+                        {
+                          "idProcessVersion": 1551,
+                          "idTasksRelation": null,
+                          "paramDecisionVar":
+                            {
+                              "action": null,
+                              "idDecisionVar": null,
+                              "idProcessVar": null,
+                              "processVar": null,
+                            },
+                          "source": { "idTask": 3128, "taskName": "TAREA DOS" },
+                          "target": { "idTask": null, "taskName": null },
+                        },
+                      ],
+                  }
+              taskRelationParallel:
+                summary: Compuerta paralela
+                value:
+                  {
+                    "user":
+                      {
+                        "country": "ESPAÑA",
+                        "countryCode": "ESP",
+                        "email": "cesaraugusto.guzman.contractor@dev.bbva.com",
+                        "groups":
+                          [
+                            "testing_administrador",
+                            "testing_gestor2",
+                            "testing_gestor",
+                            "HOL-OPE_BEXAdministrador",
+                            "HOL-OPE-Pruebas_Gestor_revision",
+                          ],
+                        "id": "XE94935",
+                        "name": "CESAR AUGUSTO GUZMAN AMAYA",
+                      },
+                    "idProcessVersion": 1550,
+                    "paramTaskRelations":
+                      [
+                        {
+                          "idProcessVersion": 1550,
+                          "idTasksRelation": null,
+                          "paramDecisionVar":
+                            {
+                              "action": null,
+                              "idDecisionVar": null,
+                              "idProcessVar": null,
+                              "processVar": null,
+                            },
+                          "source": { "idTask": null, "taskName": null },
+                          "target": { "idTask": 3119, "taskName": "TAREA UNO" },
+                        },
+                        {
+                          "idProcessVersion": 1550,
+                          "idTasksRelation": null,
+                          "paramDecisionVar":
+                            {
+                              "action": null,
+                              "idDecisionVar": null,
+                              "idProcessVar": null,
+                              "processVar": null,
+                            },
+                          "source": { "idTask": 3119, "taskName": "TAREA UNO" },
+                          "target":
+                            {
+                              "idTask": 3129,
+                              "taskName": "COMPUERTA PARALELA",
+                            },
+                        },
+                        {
+                          "idProcessVersion": 1550,
+                          "idTasksRelation": null,
+                          "paramDecisionVar":
+                            {
+                              "action": null,
+                              "idDecisionVar": null,
+                              "idProcessVar": null,
+                              "processVar": null,
+                            },
+                          "source":
+                            {
+                              "idTask": 3129,
+                              "taskName": "COMPUERTA PARALELA",
+                            },
+                          "target":
+                            {
+                              "idTask": 3125,
+                              "taskName": "TAREA PARALELA UNO",
+                            },
+                        },
+                        {
+                          "idProcessVersion": 1550,
+                          "idTasksRelation": null,
+                          "paramDecisionVar":
+                            {
+                              "action": null,
+                              "idDecisionVar": null,
+                              "idProcessVar": null,
+                              "processVar": null,
+                            },
+                          "source":
+                            {
+                              "idTask": 3129,
+                              "taskName": "COMPUERTA PARALELA",
+                            },
+                          "target":
+                            {
+                              "idTask": 3126,
+                              "taskName": "TAREA PARALELA DOS",
+                            },
+                        },
+                        {
+                          "idProcessVersion": 1550,
+                          "idTasksRelation": null,
+                          "paramDecisionVar":
+                            {
+                              "action": null,
+                              "idDecisionVar": null,
+                              "idProcessVar": null,
+                              "processVar": null,
+                            },
+                          "source":
+                            {
+                              "idTask": 3129,
+                              "taskName": "COMPUERTA PARALELA",
+                            },
+                          "target":
+                            {
+                              "idTask": 3127,
+                              "taskName": "TAREA PARALELA TRES",
+                            },
+                        },
+                        {
+                          "idProcessVersion": 1550,
+                          "idTasksRelation": null,
+                          "paramDecisionVar":
+                            {
+                              "action": null,
+                              "idDecisionVar": null,
+                              "idProcessVar": null,
+                              "processVar": null,
+                            },
+                          "source":
+                            {
+                              "idTask": 3125,
+                              "taskName": "TAREA PARALELA UNO",
+                            },
+                          "target": { "idTask": 3128, "taskName": "TAREA DOS" },
+                        },
+                        {
+                          "idProcessVersion": 1550,
+                          "idTasksRelation": null,
+                          "paramDecisionVar":
+                            {
+                              "action": null,
+                              "idDecisionVar": null,
+                              "idProcessVar": null,
+                              "processVar": null,
+                            },
+                          "source":
+                            {
+                              "idTask": 3126,
+                              "taskName": "TAREA PARALELA DOS",
+                            },
+                          "target": { "idTask": 3128, "taskName": "TAREA DOS" },
+                        },
+                        {
+                          "idProcessVersion": 1550,
+                          "idTasksRelation": null,
+                          "paramDecisionVar":
+                            {
+                              "action": null,
+                              "idDecisionVar": null,
+                              "idProcessVar": null,
+                              "processVar": null,
+                            },
+                          "source":
+                            {
+                              "idTask": 3127,
+                              "taskName": "TAREA PARALELA TRES",
+                            },
+                          "target": { "idTask": 3128, "taskName": "TAREA DOS" },
+                        },
+                        {
+                          "idProcessVersion": 1550,
+                          "idTasksRelation": null,
+                          "paramDecisionVar":
+                            {
+                              "action": null,
+                              "idDecisionVar": null,
+                              "idProcessVar": null,
+                              "processVar": null,
+                            },
+                          "source": { "idTask": 3128, "taskName": "TAREA DOS" },
+                          "target": { "idTask": null, "taskName": null },
+                        },
+                      ]
+                  }
+      responses:
+        "200":
+          description: "Success"
+components:
+  schemas:
+    TaskRelationIn:
+      type: object
+      properties:
+        user:
+          $ref: "#/components/schemas/User"
+        idProcessVersion:
+          type: integer
+        paramTaskRelations:
+          type: array
+          items:
+            $ref: "#/components/schemas/ParamTaskRelation"
+    ParamTaskRelation:
+      type: object
+      properties:
+        idProcessVersion:
+          type: integer
+          format: int32
+        idTasksRelation:
+          type: string
+          format: nullable
+        paramDecisionVar:
+          type: object
+          properties:
+            action:
+              type: string
+              format: nullable
+            idDecisionVar:
+              type: string
+              format: nullable
+            idProcessVar:
+              type: string
+              format: nullable
+            processVar:
+              type: string
+              format: nullable
+        source:
+          type: object
+          properties:
+            idTask:
+              type: integer
+              format: int32
+            taskName:
+              type: string
+              format: nullable
+        target:
+          type: object
+          properties:
+            idTask:
+              type: integer
+              format: int32
+            taskName:
+              type: string
+    ActiveServicesOut:
+      type: object
+      properties:
+        
+        activeServices:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/ActiveServices"
+        
+    ActiveServicesRequests:
+      type: object
+      properties:
+        countryCode:
+          type: "string"
+        country:
+          type: "string"
+        bexCode:
+          type: "string"
+        bex:
+          type: "string"
+        serviceName:
+          type: "string"
+        version:
+          type: "string"
+        requests:
+          type: integer
+          description: Cantidad de solicitudes
+    ActiveServices:
+      type: object
+      properties:
+        countryCode:
+          type: "string"
+        country:
+          type: "string"
+        bexCode:
+          type: "string"
+        bex:
+          type: "string"
+        serviceName:
+          type: "string"
+    ActiveServicesSummary:
+      type: object
+      properties:
+        countryCode:
+          type: "string"
+        country:
+          type: "string"
+        bexCode:
+          type: "string"
+        bex:
+          type: "string"
+        activeServices:
+          type: "integer"
+          description: "Número de servicios activos para el país BEX"
+    TasksExecution:
+      type: "object"
+      properties:
+        acceptDate:
+          type: "string"
+        estadoKanban:
+          type: "string"
+        finishDate:
+          type: "string"
+        group:
+          type: "string"
+        idProcessBPM:
+          type: "string"
+        idProcessExecution:
+          type: "string"
+        idTask:
+          type: integer
+        idTaskAction:
+          type: "string"
+        idTaskBPM:
+          type: "string"
+        name:
+          type: "string"
+    ParamTaskIn:
+      type: object
+      properties:
+        user:
+          $ref: "#/components/schemas/User"
+        paramTask:
+          $ref: "#/components/schemas/ParamTask"
+    ParamTask:
+      type: object
+      properties:
+        idTask:
+          type: integer
+        taskType:
+          $ref: "#/components/schemas/TaskType"
+        idProcessVersion:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        assignedGroup:
+          type: "array"
+          items:
+            type: string
+        kanbanStatus:
+          $ref: "#/components/schemas/KanbanStatus"
+        idIntegration:
+          type: integer
+        paramTaskFields:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/ParamTaskField"
+        paramSLATasks:
+          $ref: "#/components/schemas/TaskSLA"
+    TaskType:
+      type: object
+      properties:
+        idTaskType:
+          type: integer
+        descripcion:
+          type: string
+    ParamTaskField:
+      type: object
+      properties:
+        idTaskField:
+          type: integer
+        idTask:
+          type: integer
+        name:
+          type: string
+        variableType:
+          $ref: "#/components/schemas/VariableType"
+        required:
+          type: boolean
+        editable:
+          type: boolean
+        hidden:
+          type: boolean
+        idProcessVar:
+          type: integer
+        list:
+          $ref: "#/components/schemas/List"
+    List:
+      type: object
+      properties:
+        idList:
+          type: integer
+        name:
+          type: string
+        listValue:
+          type: array
+          items:
+            $ref: "#/components/schemas/ListValue"
+        idProcessVersion:
+          type: integer
+    ListValue:
+      type: object
+      properties:
+        idListValue:
+          type: integer
+        description:
+          type: string
+    VariableType:
+      type: object
+      properties:
+        idVariableType:
+          type: integer
+        description:
+          type: string
+    TaskSLA:
+      type: object
+      properties:
+        durationType:
+          $ref: "#/components/schemas/DurationType"
+        idProcessVersion:
+          type: integer
+        idSlaTask:
+          type: integer
+        sLAType:
+          $ref: "#/components/schemas/SLAType"
+        value:
+          type: integer
+    SLAType:
+      type: object
+      properties:
+        descripcion:
+          type: string
+        idSLAType:
+          type: integer
+    DurationType:
+      type: object
+      properties:
+        descripcion:
+          type: string
+        idDurationType:
+          type: integer
+    KanbanStatus:
+      type: object
+      properties:
+        idKanbanStatus:
+          type: integer
+        description:
+          type: string
+    Processmodelsfilter:
+      type: "object"
+      properties:
+        user:
+          $ref: "#/components/schemas/User"
+    User:
+      type: "object"
+      properties:
+        country:
+          type: "string"
+        countryCode:
+          type: "string"
+        email:
+          type: "string"
+        groups:
+          type: "array"
+          items:
+            type: "string"
+        id:
+          type: "string"
+        name:
+          type: "string"
